@@ -2,7 +2,7 @@ import Colors from "@/shared/Colors";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 
-export default function Button({ title, onPress, icon }) {
+export default function Button({ title, onPress }) {
   return (
     <TouchableOpacity
       onPress={onPress}

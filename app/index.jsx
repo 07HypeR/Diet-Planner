@@ -1,8 +1,11 @@
 import Button from "@/components/shared/Button";
 import Colors from "@/shared/Colors";
+import { useRouter } from "expo-router";
+import { ArrowRight } from "lucide-react-native";
 import { Dimensions, Image, Text, View } from "react-native";
 
 export default function Index() {
+  const router = useRouter();
   return (
     <View
       style={{
@@ -58,8 +61,9 @@ export default function Index() {
         style={{ position: "absolute", bottom: 25, width: "100%", padding: 20 }}
       >
         <Button
-          title="Get Started"
-          onPress={() => console.log("Get Started Pressed")}
+          title={"Get Started"}
+          onPress={() => router.push("/auth/SignIn")}
+          icon={<ArrowRight />}
         />
         ;
       </View>

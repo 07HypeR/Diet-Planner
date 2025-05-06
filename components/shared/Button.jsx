@@ -2,12 +2,7 @@ import Colors from "@/shared/Colors";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 
-interface ButtonProps {
-  title: string;
-  onPress?: () => void;
-}
-
-export default function Button({ title, onPress }: ButtonProps) {
+export default function Button({ title, onPress, icon }) {
   return (
     <TouchableOpacity
       onPress={onPress}

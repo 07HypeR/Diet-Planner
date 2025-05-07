@@ -14,6 +14,17 @@ export default function SignUp() {
       Alert.alert("Missing Fields!", "Enter All field Value");
       return;
     }
+
+    // createUserWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     const user = userCredential.user;
+    //     console.log(user);
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorMessage);
+    //   });
   };
   return (
     <View

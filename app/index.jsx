@@ -63,7 +63,6 @@ export default function Index() {
           title={"Get Started"}
           onPress={() => router.push("/auth/SignIn")}
         />
-        ;
       </View>
     </View>
   );

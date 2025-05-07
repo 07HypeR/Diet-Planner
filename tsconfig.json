@@ -14,6 +14,8 @@
     "components/shared/Input.jsx",
     "components/shared/Button.jsx",
     "app/index.jsx",
+    "services/FirebaseConfig.js",
+    "app/_layout.tsx",
     "app/auth/SignUp.jsx",
     "app/auth/SignIn.jsx"
   ]

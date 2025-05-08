@@ -8,7 +8,7 @@ import {
 import { Platform } from "react-native";
 
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_KEY,
   authDomain: "diet-planner-b06a5.firebaseapp.com",
   projectId: "diet-planner-b06a5",
   storageBucket: "diet-planner-b06a5.firebasestorage.app",
@@ -17,10 +17,8 @@ const firebaseConfig = {
   measurementId: "G-JLQJVHDJF7",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Use getReactNativePersistence only for non-web (i.e., React Native)
 export const auth =
   Platform.OS === "web"
     ? getAuth(app)

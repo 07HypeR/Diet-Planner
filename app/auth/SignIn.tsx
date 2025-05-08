@@ -1,13 +1,14 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function SignIn() {
+  const router = useRouter();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const onSignIn = () => {
+  const onSignIn = async () => {
     if (!email || !password) {
       Alert.alert("Missing Fields!", "Enter All field Value");
       return;
@@ -51,7 +52,7 @@ export default function SignIn() {
         <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
           Don't have an account?
         </Text>
-        <Link href={"/auth/SignUp"}>
+        <TouchableOpacity onPress={() => router.push("/auth/SignUp")}>
           <Text
             style={{
               textAlign: "center",
@@ -62,7 +63,7 @@ export default function SignIn() {
           >
             Create New Account
           </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -1,31 +1,33 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
-import { Link } from "expo-router";
+import { auth } from "@/services/FirebaseConfig";
+import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function SignUp() {
+  const router = useRouter();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const onSignUp = () => {
+  const onSignUp = async () => {
     if (!name || !email || !password) {
       Alert.alert("Missing Fields!", "Enter All field Value");
       return;
     }
-
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     const user = userCredential.user;
-    //     console.log(user);
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorMessage);
-    //   });
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
+
   return (
     <View
       style={{
@@ -65,7 +67,7 @@ export default function SignUp() {
         <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
           Already have an account?
         </Text>
-        <Link href={"/auth/SignIn"}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Text
             style={{
               textAlign: "center",
@@ -76,7 +78,7 @@ export default function SignUp() {
           >
             Sign In Here
           </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -15,6 +15,7 @@
     "components/shared/Button.jsx",
     "services/FirebaseConfig.jsx",
     "services/AiModel.jsx",
-    "components/home/HomeHeader.jsx"
+    "components/home/HomeHeader.jsx",
+    "app/recipe-detail/index.jsx"
   ]
 }

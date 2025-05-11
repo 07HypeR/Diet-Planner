@@ -1,30 +1,61 @@
-import { GenerateRecipe } from "@/services/AiModel";
+import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
+import { GenerateRecipe, RecipeImageApi } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
 import Prompt from "@/shared/Prompt";
-import { useState } from "react";
+import { useMutation } from "convex/react";
+import { useRouter } from "expo-router";
+import { useContext, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import LoadingDialog from "../shared/LoadingDialog";
 
 export default function RecipeOptionList({ RecipeOption }) {
   const [loading, setLoading] = useState();
-  const onRecipeOptionSelect = async (recipe) => {
-    setLoading(true);
-    const PROMPT =
-      "RecipeName:" +
-      recipe?.recipeName +
-      " Description:" +
-      recipe?.description +
-      Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
+  const CreateRecipe = useMutation(api.Recipes.CreateRecipe);
+  const { user } = useContext(UserContext);
+  const router = useRouter();
 
+  const onRecipeOptionSelect = async (recipe) => {
+    if (loading) return;
+
+    setLoading(true);
     try {
+      const PROMPT =
+        "RecipeName:" +
+        recipe?.recipeName +
+        " Description:" +
+        recipe?.description +
+        Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
+
       const result = await GenerateRecipe(PROMPT);
       const extractJson = result.choices[0].message.content
         ?.replace("```json", "")
         .replace("```", "");
       const parsedJsonResp = JSON.parse(extractJson ?? "{}");
       console.log(parsedJsonResp);
-      setLoading(false);
+
+      // Generate Recipe Image
+      const aiImageresp = await RecipeImageApi.post("/generate-image", {
+        prompt: parsedJsonResp?.imagePrompt,
+      });
+      console.log(aiImageresp.data.imageUrl);
+
+      // Save to Db
+      const saveRecipeResult = await CreateRecipe({
+        jsonData: parsedJsonResp,
+        imageUrl: aiImageresp.data.imageUrl,
+        recipeName: parsedJsonResp?.recipeName,
+        uid: user?._id,
+      });
+      console.log(saveRecipeResult);
+
+      router.push({
+        pathname: "/recipe-detail",
+        recipeId: saveRecipeResult,
+      });
     } catch (e) {
+      console.error("Error generating recipe:", e);
+    } finally {
       setLoading(false);
     }
   };

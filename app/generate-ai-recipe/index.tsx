@@ -12,6 +12,7 @@ export default function GenerateAiRecipe() {
   const [loading, setLoading] = useState(false);
   const [recipeOption, setRecipeOption] = useState<any[]>([]);
   const GenerateRecipeOptions = async () => {
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -33,7 +34,7 @@ export default function GenerateAiRecipe() {
   return (
     <View
       style={{
-        paddingTop: Platform.OS == "ios" ? 50 : 50,
+        paddingTop: Platform.OS == "ios" ? 55 : 55,
         padding: 20,
         backgroundColor: Colors.WHITE,
         height: "100%",

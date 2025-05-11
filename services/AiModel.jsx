@@ -1,3 +1,4 @@
+import axios from "axios";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -21,4 +22,7 @@ export const GenerateRecipe = async (PROMPT) =>
     response_format: "json_object",
   });
 
-// console.log(CalculateCaloriesAi.choices[0].message);
+const BASE_URL = "https://diet-planner-image-server.onrender.com/api";
+export const RecipeImageApi = axios.create({
+  baseURL: BASE_URL,
+});

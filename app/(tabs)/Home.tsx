@@ -5,7 +5,7 @@ import TodaysMealPlan from "@/components/home/TodaysMealPlan";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "expo-router";
 import React, { useContext, useEffect } from "react";
-import { Platform, View } from "react-native";
+import { FlatList, Platform, View } from "react-native";
 
 export default function Home() {
   const { user } = useContext(UserContext);
@@ -17,11 +17,20 @@ export default function Home() {
     }
   }, [user]);
   return (
-    <View style={{ padding: 20, marginTop: Platform.OS === "ios" ? 40 : 30 }}>
-      <HomeHeader />
-      <TodayProgress />
-      <GanerateRecipeCard />
-      <TodaysMealPlan />
-    </View>
+    <FlatList
+      data={[]}
+      renderItem={() => null}
+      showsVerticalScrollIndicator={false}
+      ListHeaderComponent={
+        <View
+          style={{ padding: 20, marginTop: Platform.OS === "ios" ? 40 : 40 }}
+        >
+          <HomeHeader />
+          <TodayProgress />
+          <GanerateRecipeCard />
+          <TodaysMealPlan />
+        </View>
+      }
+    />
   );
 }

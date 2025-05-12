@@ -1,12 +1,33 @@
+import { RefreshDataContext } from "@/context/RefreshDataContex";
+import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { CalendarAdd01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useState } from "react";
-import { Text, View } from "react-native";
+import { useConvex } from "convex/react";
+import moment from "moment";
+import { useContext, useEffect, useState } from "react";
+import { FlatList, Text, View } from "react-native";
 import Button from "../shared/Button";
+import MealPlanCard from "./MealPlanCard";
 
 export default function TodaysMealPlan() {
   const [mealPlan, setMealPlan] = useState();
+  const { user } = useContext(UserContext);
+  const convex = useConvex();
+  const { refreshData, setRefreshData } = useContext(RefreshDataContext);
+
+  useEffect(() => {
+    user && GetTodaysMealPlan();
+  }, [user, refreshData]);
+  const GetTodaysMealPlan = async () => {
+    const result = await convex.query(api.MealPlan.GetTodaysMealPlan, {
+      date: moment().format("DD/MM/YYYY"),
+      uid: user?._id,
+    });
+    console.log("-->", result);
+    setMealPlan(result);
+  };
   return (
     <View style={{ marginTop: 15 }}>
       <Text
@@ -18,7 +39,7 @@ export default function TodaysMealPlan() {
         Today's Meal Plan
       </Text>
 
-      {!mealPlan && (
+      {!mealPlan == null ? (
         <View
           style={{
             display: "flex",
@@ -45,6 +66,13 @@ export default function TodaysMealPlan() {
           </Text>
 
           <Button title={"Create New Meal Plan"} />
+        </View>
+      ) : (
+        <View>
+          <FlatList
+            data={mealPlan}
+            renderItem={({ item }) => <MealPlanCard mealPlanInfo={item} />}
+          />
         </View>
       )}
     </View>

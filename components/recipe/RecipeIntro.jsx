@@ -1,3 +1,4 @@
+import AddToMealActionSheet from "@/components/recipe/AddToMealActionSheet";
 import Colors from "@/shared/Colors";
 import {
   Dumbbell01Icon,
@@ -6,10 +7,13 @@ import {
   TimeQuarter02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useRef } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ActionSheet from "react-native-actions-sheet";
 
 export default function RecipeIntro({ recipeDetail }) {
   const RecipeJson = recipeDetail?.jsonData;
+  const actionSheetRef = useRef(null);
   return (
     <View>
       <Image
@@ -34,15 +38,19 @@ export default function RecipeIntro({ recipeDetail }) {
           style={{
             fontSize: 25,
             fontWeight: "bold",
+            flex: 1,
+            flexShrink: 1,
           }}
         >
           {recipeDetail?.recipeName}
         </Text>
-        <HugeiconsIcon
-          icon={PlusSignSquareIcon}
-          size={40}
-          color={Colors.PRIMARY}
-        />
+        <TouchableOpacity onPress={() => actionSheetRef.current.show()}>
+          <HugeiconsIcon
+            icon={PlusSignSquareIcon}
+            size={40}
+            color={Colors.PRIMARY}
+          />
+        </TouchableOpacity>
       </View>
       <Text
         style={{
@@ -73,7 +81,7 @@ export default function RecipeIntro({ recipeDetail }) {
             size={27}
           />
           <Text style={styles.subText}>Calories</Text>
-          <Text style={styles.counts}>{RecipeJson?.calories}</Text>
+          <Text style={styles.counts}>{RecipeJson?.calories} Kcal</Text>
         </View>
         <View style={styles.propertyContainer}>
           <HugeiconsIcon
@@ -83,7 +91,7 @@ export default function RecipeIntro({ recipeDetail }) {
             size={27}
           />
           <Text style={styles.subText}>Proteins</Text>
-          <Text style={styles.counts}>{RecipeJson?.proteins}</Text>
+          <Text style={styles.counts}>{RecipeJson?.proteins} Gm</Text>
         </View>
         <View style={styles.propertyContainer}>
           <HugeiconsIcon
@@ -106,6 +114,12 @@ export default function RecipeIntro({ recipeDetail }) {
           <Text style={styles.counts}>{RecipeJson?.serveTo}</Text> */}
         </View>
       </View>
+      <ActionSheet ref={actionSheetRef}>
+        <AddToMealActionSheet
+          recipeDetail={recipeDetail}
+          hideActionSheet={() => actionSheetRef.current.hide()}
+        />
+      </ActionSheet>
     </View>
   );
 }

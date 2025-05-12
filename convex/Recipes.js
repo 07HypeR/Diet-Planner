@@ -6,7 +6,7 @@ export const CreateRecipe = mutation({
     jsonData: v.any(),
     uid: v.id("users"),
     imageUrl: v.string(),
-    recipeName: v.string(),
+    recipeName: v.any(),
   },
   handler: async (ctx, args) => {
     const result = await ctx.db.insert("recipes", {

@@ -16,6 +16,6 @@
     "services/FirebaseConfig.jsx",
     "services/AiModel.jsx",
     "components/home/HomeHeader.jsx",
-    "app/recipe-detail/index.jsx"
+    "app/recipe-detail/[index].jsx"
   ]
 }

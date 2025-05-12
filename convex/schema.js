@@ -20,7 +20,7 @@ export default defineSchema({
     jsonData: v.any(),
     uid: v.id("users"),
     imageUrl: v.string(),
-    recipeName: v.any(),
+    recipeName: v.string(),
   }),
 
   mealPlan: defineTable({

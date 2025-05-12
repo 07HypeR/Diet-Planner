@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_OPENROUTER_API_KEY,
 });
 
-const AIMODELNAME = "google/gemini-2.0-flash-exp:free";
+const AIMODELNAME = "google/gemma-3-12b-it:free";
 
 export const CalculateCaloriesAi = async (PROMPT) =>
   await openai.chat.completions.create({

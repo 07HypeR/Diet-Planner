@@ -3,7 +3,14 @@ import { GenerateRecipe } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
 import Prompt from "@/shared/Prompt";
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import EmptyRecipeState from "../../components/recipe/EmptyRecipeState";
 import RecipeOptionList from "../../components/recipe/RecipeOptionList";
 
@@ -32,50 +39,50 @@ export default function GenerateAiRecipe() {
     }
   };
   return (
-    <View
-      style={{
-        paddingTop: Platform.OS == "ios" ? 55 : 55,
-        padding: 20,
-        backgroundColor: Colors.WHITE,
-        height: "100%",
-      }}
-    >
-      <Text
+    <ScrollView style={{ backgroundColor: Colors.WHITE, height: "100%" }}>
+      <View
         style={{
-          fontSize: 30,
-          fontWeight: "bold",
+          paddingTop: Platform.OS == "ios" ? 55 : 55,
+          padding: 20,
         }}
       >
-        Ai Recipe Generator ✨
-      </Text>
-      <Text
-        style={{
-          marginTop: 5,
-          fontSize: 16,
-          color: Colors.GRAY,
-        }}
-      >
-        Generate Personalized recipes using AI
-      </Text>
-      <TextInput
-        style={styles.textArea}
-        placeholder="Enter your ingrdient or recipe name"
-        placeholderTextColor={"#ccc"}
-        onChangeText={(value) => setInput(value)}
-      />
-      <View style={{ marginTop: 25 }}>
-        <Button
-          title={"Generate Recipe"}
-          onPress={GenerateRecipeOptions}
-          loading={loading}
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "bold",
+          }}
+        >
+          Ai Recipe Generator ✨
+        </Text>
+        <Text
+          style={{
+            marginTop: 5,
+            fontSize: 16,
+            color: Colors.GRAY,
+          }}
+        >
+          Generate Personalized recipes using AI
+        </Text>
+        <TextInput
+          style={styles.textArea}
+          placeholder="Enter your ingrdient or recipe name"
+          placeholderTextColor={"#ccc"}
+          onChangeText={(value) => setInput(value)}
         />
+        <View style={{ marginTop: 25 }}>
+          <Button
+            title={"Generate Recipe"}
+            onPress={GenerateRecipeOptions}
+            loading={loading}
+          />
+        </View>
+        {recipeOption?.length > 0 ? (
+          <RecipeOptionList RecipeOption={recipeOption} />
+        ) : (
+          <EmptyRecipeState />
+        )}
       </View>
-      {recipeOption?.length > 0 ? (
-        <RecipeOptionList RecipeOption={recipeOption} />
-      ) : (
-        <EmptyRecipeState />
-      )}
-    </View>
+    </ScrollView>
   );
 }
 

@@ -8,18 +8,26 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useMutation } from "convex/react";
-import moment from "moment";
-import { useContext, useEffect, useState } from "react";
-import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 import Button from "../shared/Button";
+import DateSelectionCard from "../shared/DateSelectionCard";
 
 export default function AddToMealActionSheet({
   recipeDetail,
   hideActionSheet,
 }) {
-  const [dateList, setDateList] = useState([]);
   const [selectedDate, setSelectedDate] = useState();
   const [selectedMeal, setSelectedMeal] = useState();
+  const [showAlert, setShowAlert] = useState(false);
   const createMealPlan = useMutation(api.MealPlan.CreateMealPlan);
   const { user } = useContext(UserContext);
   const mealOption = [
@@ -37,22 +45,6 @@ export default function AddToMealActionSheet({
     },
   ];
 
-  useEffect(() => {
-    GenerateDates();
-  }, []);
-
-  const GenerateDates = () => {
-    const result = [];
-
-    for (let i = 0; i < 4; i++) {
-      const nextdate = moment().add(i, "days").format("DD/MM/YYYY");
-      result.push(nextdate);
-    }
-    console.log(result);
-
-    setDateList(result);
-  };
-
   const AddToMealPlan = async () => {
     if (!selectedDate && !selectedMeal) {
       Alert.alert("Error!", "Please Select All Details");
@@ -68,7 +60,20 @@ export default function AddToMealActionSheet({
 
     console.log(result);
 
-    Alert.alert("Added!", "Added to Meal Plan");
+    if (Platform.OS === "ios") {
+      Alert.alert("Added!", "Added to meal plan");
+    } else {
+      Toast.show({
+        type: "custom",
+        text1: "Added!",
+        text2: "Added to meal plan",
+        position: "bottom",
+        visibilityTime: 2500,
+        props: {
+          icon: "🥳",
+        },
+      });
+    }
     hideActionSheet();
   };
 
@@ -82,56 +87,8 @@ export default function AddToMealActionSheet({
         Add To Meal
       </Text>
 
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          marginTop: 15,
-        }}
-      >
-        Select Date
-      </Text>
-      <FlatList
-        data={dateList}
-        numColumns={4}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            onPress={() => setSelectedDate(item)}
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              padding: 7,
-              borderWidth: 1,
-              borderRadius: 10,
-              margin: 5,
-              borderColor: selectedDate == item ? Colors.PRIMARY : Colors.GRAY,
-              backgroundColor:
-                selectedDate == item ? Colors.SECONDARY : Colors.WHITE,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "500",
-              }}
-            >
-              {moment(item, "DD/MM/YYYY").format("ddd")}
-            </Text>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              {moment(item, "DD/MM/YYYY").format("DD")}
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              {moment(item, "DD/MM/YYYY").format("MMM")}
-            </Text>
-          </TouchableOpacity>
-        )}
-      />
+      <DateSelectionCard setSelectedDate={setSelectedDate} />
+
       <Text
         style={{
           fontSize: 18,

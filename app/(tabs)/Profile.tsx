@@ -1,10 +1,146 @@
-import React from "react";
-import { Text, View } from "react-native";
+import { UserContext } from "@/context/UserContext";
+import { auth } from "@/services/FirebaseConfig";
+import Colors from "@/shared/Colors";
+import {
+  AnalyticsUpIcon,
+  CookBookIcon,
+  Login03Icon,
+  ServingFoodIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react-native";
+import { useRouter } from "expo-router";
+import { signOut } from "firebase/auth";
+import React, { useContext } from "react";
+import {
+  FlatList,
+  Image,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+const MenuOption = [
+  {
+    tittle: "My Progress",
+    icon: AnalyticsUpIcon,
+    path: "/(tabs)/Progress",
+  },
+  {
+    tittle: " Explore Recipes",
+    icon: CookBookIcon,
+    path: "/(tabs)/Meals",
+  },
+  {
+    tittle: "Ai Recipies",
+    icon: ServingFoodIcon,
+    path: "/generate-ai-recipe",
+  },
+  {
+    tittle: "Log out",
+    icon: Login03Icon,
+    path: "logout",
+  },
+];
 
 export default function Profile() {
+  const { user, setUser } = useContext(UserContext);
+  const router = useRouter();
+
+  const OnMenuOptionClick =
+    //@ts-ignore
+    (menu) => {
+      if (menu.path == "logout") {
+        signOut(auth).then(() => {
+          console.log("Sign-out");
+          setUser(null);
+          router.replace("/");
+        });
+        return;
+      }
+      router.push(menu?.path);
+    };
   return (
-    <View>
-      <Text>Profile</Text>
+    <View
+      style={{
+        padding: 20,
+        paddingTop: Platform.OS == "ios" ? 55 : 55,
+        backgroundColor: Colors.SECONDARY,
+        height: "100%",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 30,
+          fontWeight: "bold",
+        }}
+      >
+        Profile
+      </Text>
+
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginTop: 15,
+        }}
+      >
+        <Image
+          source={require("../../assets/images/user.png")}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 99,
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            marginTop: 5,
+          }}
+        >
+          {user?.name}
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            color: Colors.GRAY,
+            marginTop: 5,
+          }}
+        >
+          {user?.email}
+        </Text>
+      </View>
+
+      <FlatList
+        data={MenuOption}
+        style={{
+          marginTop: 15,
+        }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            onPress={() => OnMenuOptionClick(item)}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 6,
+              alignItems: "center",
+              padding: 15,
+              borderWidth: 0.2,
+              marginTop: 5,
+              backgroundColor: Colors.WHITE,
+              elevation: 1,
+              borderRadius: 99,
+            }}
+          >
+            <HugeiconsIcon icon={item.icon} size={35} color={Colors.PRIMARY} />
+            <Text style={{ fontSize: 20, fontWeight: "300" }}>
+              {item.tittle}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 }

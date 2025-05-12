@@ -5,41 +5,68 @@ import Colors from "@/shared/Colors";
 import { CalendarAdd01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useConvex } from "convex/react";
+import { useRouter } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import Button from "../shared/Button";
 import MealPlanCard from "./MealPlanCard";
 
-export default function TodaysMealPlan() {
+export default function TodaysMealPlan({ selectedDate }) {
   const [mealPlan, setMealPlan] = useState();
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
   const convex = useConvex();
-  const { refreshData, setRefreshData } = useContext(RefreshDataContext);
+  const { refreshData } = useContext(RefreshDataContext);
+  const router = useRouter();
 
   useEffect(() => {
-    user && GetTodaysMealPlan();
-  }, [user, refreshData]);
+    if (user && selectedDate !== undefined) {
+      GetTodaysMealPlan();
+    }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (user) {
+      convex
+        .query(api.MealPlan.GetTodaysMealPlan, {
+          date: selectedDate ?? moment().format("DD/MM/YYYY"),
+          uid: user?._id,
+        })
+        .then((result) => setMealPlan(result));
+    }
+  }, [refreshData]);
+
   const GetTodaysMealPlan = async () => {
-    const result = await convex.query(api.MealPlan.GetTodaysMealPlan, {
-      date: moment().format("DD/MM/YYYY"),
-      uid: user?._id,
-    });
-    console.log("-->", result);
-    setMealPlan(result);
+    setLoading(true);
+    try {
+      const result = await convex.query(api.MealPlan.GetTodaysMealPlan, {
+        date: selectedDate ?? moment().format("DD/MM/YYYY"),
+        uid: user?._id,
+      });
+      setMealPlan(result);
+    } catch (error) {
+      console.error("Error fetching meal plan:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <View style={{ marginTop: 15 }}>
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: "bold",
-        }}
-      >
-        Today's Meal Plan
-      </Text>
+      {!selectedDate && (
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+          Today's Meal Plan
+        </Text>
+      )}
 
-      {!mealPlan || mealPlan.length === 0 ? (
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color={Colors.PRIMARY}
+          style={{ marginTop: 20 }}
+        />
+      ) : !mealPlan || mealPlan.length === 0 ? (
         <View
           style={{
             display: "flex",
@@ -55,25 +82,38 @@ export default function TodaysMealPlan() {
             size={40}
             color={Colors.PRIMARY}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              color: Colors.GRAY,
-              marginBottom: 20,
-            }}
-          >
-            You Don't have any meal plan for Today
+          <Text style={{ fontSize: 18, color: Colors.GRAY, marginBottom: 20 }}>
+            You Don't have any meal plan for{" "}
+            {selectedDate
+              ? moment(selectedDate, "DD/MM/YYYY").isSame(moment(), "day")
+                ? "Today"
+                : moment(selectedDate, "DD/MM/YYYY").isSame(
+                      moment().add(1, "day"),
+                      "day"
+                    )
+                  ? "Tomorrow"
+                  : "this day"
+              : "Today"}
           </Text>
-
-          <Button title={"Create New Meal Plan"} />
-        </View>
-      ) : (
-        <View>
-          <FlatList
-            data={mealPlan}
-            renderItem={({ item }) => <MealPlanCard mealPlanInfo={item} />}
+          <Button
+            title={"Create New Meal Plan"}
+            onPress={() => router.push("/(tabs)/Meals")}
           />
         </View>
+      ) : (
+        <FlatList
+          data={mealPlan}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <MealPlanCard
+              mealPlanInfo={item}
+              showCheckbox={
+                !selectedDate ||
+                moment(selectedDate, "DD/MM/YYYY").isSame(moment(), "day")
+              }
+            />
+          )}
+        />
       )}
     </View>
   );

@@ -8,25 +8,41 @@ import { useContext } from "react";
 import {
   Alert,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
-export default function MealPlanCard({ mealPlanInfo }) {
+export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
   const UpdateStatus = useMutation(api.MealPlan.updateStatus);
   const { refreshData, setRefreshData } = useContext(RefreshDataContext);
 
   const onCheck = async (status) => {
-    const result = await UpdateStatus({
+    await UpdateStatus({
       id: mealPlanInfo?.mealPlan?._id,
-      status: status,
+      status,
       calories: mealPlanInfo?.recipe?.jsonData?.calories,
       proteins: mealPlanInfo?.recipe?.jsonData?.proteins,
     });
 
-    Alert.alert("Great!", "Status Updated");
+    if (Platform.OS === "ios") {
+      Alert.alert("Great!", "Status Updated");
+    } else {
+      Toast.show({
+        type: "custom",
+        text1: "Great!",
+        text2: "Status Updated",
+        position: "bottom",
+        visibilityTime: 2500,
+        props: {
+          icon: "🤩",
+        },
+      });
+    }
+
     setRefreshData(Date.now());
   };
   return (
@@ -84,18 +100,19 @@ export default function MealPlanCard({ mealPlanInfo }) {
           </View>
         </View>
         <View>
-          {mealPlanInfo?.mealPlan?.status != true ? (
-            <TouchableOpacity onPress={() => onCheck(true)}>
-              <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => onCheck(false)}>
-              <HugeiconsIcon
-                icon={CheckmarkSquare02Icon}
-                color={Colors.GREEN}
-              />
-            </TouchableOpacity>
-          )}
+          {showCheckbox &&
+            (mealPlanInfo?.mealPlan?.status != true ? (
+              <TouchableOpacity onPress={() => onCheck(true)}>
+                <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => onCheck(false)}>
+                <HugeiconsIcon
+                  icon={CheckmarkSquare02Icon}
+                  color={Colors.GREEN}
+                />
+              </TouchableOpacity>
+            ))}
         </View>
       </View>
     </View>

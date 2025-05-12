@@ -1,9 +1,16 @@
 import GanerateRecipeCard from "@/components/home/GanerateRecipeCard";
 import RecipeCard from "@/components/meals/RecipeCard";
 import { api } from "@/convex/_generated/api";
+import Colors from "@/shared/Colors";
 import { useQuery } from "convex/react";
 import React from "react";
-import { FlatList, Platform, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  Text,
+  View,
+} from "react-native";
 
 export default function Meals() {
   //@ts-ignore
@@ -32,11 +39,25 @@ export default function Meals() {
           </Text>
           <GanerateRecipeCard />
           <View>
-            <FlatList
-              data={recipeList}
-              numColumns={2}
-              renderItem={({ item, index }) => <RecipeCard recipe={item} />}
-            />
+            {!recipeList ? (
+              <View
+                style={{
+                  height: 600,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator size="large" color={Colors.PRIMARY} />
+              </View>
+            ) : (
+              <FlatList
+                data={recipeList}
+                numColumns={2}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => <RecipeCard recipe={item} />}
+                scrollEnabled={false} // Disable inner scroll
+              />
+            )}
           </View>
         </View>
       }

@@ -51,7 +51,7 @@ export default function RecipeOptionList({ RecipeOption }) {
 
       router.push({
         pathname: "/recipe-detail",
-        recipeId: saveRecipeResult,
+        params: { recipeId: saveRecipeResult },
       });
     } catch (e) {
       console.error("Error generating recipe:", e);

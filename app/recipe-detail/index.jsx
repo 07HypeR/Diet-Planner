@@ -13,9 +13,9 @@ import RecipeIntro from "../../components/recipe/RecipeIntro";
 
 export default function RecipeDetail() {
   const { recipeId } = useLocalSearchParams();
-  console.log(recipeId); //jd7ch37s9pfqje2vk90dn9rpm97fq0md
+  console.log("recipeId:", recipeId);
   const recipeDetail = useQuery(api.Recipes.GetRecipeById, {
-    id: recipeId == undefined && "jd700zp1qvhsgnhtw5za3d76zs7fqjms",
+    id: recipeId,
   });
   console.log("recipeDetail", recipeDetail);
   const actionSheetRef = useRef(null);

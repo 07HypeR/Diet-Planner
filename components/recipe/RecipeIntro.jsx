@@ -91,7 +91,7 @@ export default function RecipeIntro({ recipeDetail }) {
             size={27}
           />
           <Text style={styles.subText}>Proteins</Text>
-          <Text style={styles.counts}>{RecipeJson?.proteins} Gm</Text>
+          <Text style={styles.counts}>{RecipeJson?.proteins} g</Text>
         </View>
         <View style={styles.propertyContainer}>
           <HugeiconsIcon
@@ -102,16 +102,6 @@ export default function RecipeIntro({ recipeDetail }) {
           />
           <Text style={styles.subText}>Time</Text>
           <Text style={styles.counts}>{RecipeJson?.cookTime} Min</Text>
-          {/* </View>
-        <View style={styles.propertyContainer}>
-          <HugeiconsIcon
-            icon={ServingFoodIcon}
-            style={styles.iconBg}
-            color={Colors.PRIMARY}
-            size={27}
-          />
-          <Text style={styles.subText}>Serve</Text>
-          <Text style={styles.counts}>{RecipeJson?.serveTo}</Text> */}
         </View>
       </View>
       <ActionSheet ref={actionSheetRef}>

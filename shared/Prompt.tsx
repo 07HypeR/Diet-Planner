@@ -31,10 +31,10 @@ export default {
     {
       "description":"string",
       "recipeName":"string",
-      "calories":"string",
-      "proteins":"string",
+      "calories":number,
+      "proteins":number,
       "category":["string"],
-      "cookTime":"number",
+      "cookTime":number,
       "imagePrompt":"string",
       "ingredients":[
         {
@@ -45,7 +45,7 @@ export default {
       ],
       "calories":<Single Person Serve>,
       "proteins":<Single Person Serve>,
-      "serveTo":"number",
+      "serveTo":number,
       "steps":["string"]
     }
   `,

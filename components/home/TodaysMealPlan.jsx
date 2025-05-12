@@ -39,7 +39,7 @@ export default function TodaysMealPlan() {
         Today's Meal Plan
       </Text>
 
-      {!mealPlan == null ? (
+      {!mealPlan || mealPlan.length === 0 ? (
         <View
           style={{
             display: "flex",

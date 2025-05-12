@@ -13,10 +13,12 @@ import RecipeIntro from "../../components/recipe/RecipeIntro";
 
 export default function RecipeDetail() {
   const { recipeId } = useLocalSearchParams();
+  const id = Array.isArray(recipeId) ? recipeId[0] : recipeId;
   console.log("recipeId:", recipeId);
-  const recipeDetail = useQuery(api.Recipes.GetRecipeById, {
-    id: recipeId,
-  });
+  const recipeDetail = useQuery(
+    api.Recipes.GetRecipeById,
+    id ? { id } : "skip"
+  );
   console.log("recipeDetail", recipeDetail);
   const actionSheetRef = useRef(null);
 

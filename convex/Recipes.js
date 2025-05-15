@@ -29,9 +29,15 @@ export const GetRecipeById = query({
   },
 });
 
-export const GetAllRecipes = query({
+export const GetAllRecipesByUser = query({
+  args: {
+    uid: v.id("users"),
+  },
   handler: async (ctx, args) => {
-    const result = await ctx.db.query("recipes").collect();
+    const result = await ctx.db
+      .query("recipes")
+      .filter((q) => q.eq(q.field("uid"), args.uid))
+      .collect();
     return result;
   },
 });

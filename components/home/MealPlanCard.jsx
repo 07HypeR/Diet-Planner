@@ -8,41 +8,25 @@ import { useContext } from "react";
 import {
   Alert,
   Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import Toast from "react-native-toast-message";
 
 export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
   const UpdateStatus = useMutation(api.MealPlan.updateStatus);
   const { refreshData, setRefreshData } = useContext(RefreshDataContext);
 
   const onCheck = async (status) => {
-    await UpdateStatus({
+    const result = await UpdateStatus({
       id: mealPlanInfo?.mealPlan?._id,
-      status,
+      status: status,
       calories: mealPlanInfo?.recipe?.jsonData?.calories,
       proteins: mealPlanInfo?.recipe?.jsonData?.proteins,
     });
 
-    if (Platform.OS === "ios") {
-      Alert.alert("Great!", "Status Updated");
-    } else {
-      Toast.show({
-        type: "custom",
-        text1: "Great!",
-        text2: "Status Updated",
-        position: "bottom",
-        visibilityTime: 2500,
-        props: {
-          icon: "🤩",
-        },
-      });
-    }
-
+    Alert.alert("Great!", "Status Updated");
     setRefreshData(Date.now());
   };
   return (
@@ -99,9 +83,9 @@ export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
             </Text>
           </View>
         </View>
-        <View>
-          {showCheckbox &&
-            (mealPlanInfo?.mealPlan?.status != true ? (
+        {showCheckbox && (
+          <View>
+            {mealPlanInfo?.mealPlan?.status != true ? (
               <TouchableOpacity onPress={() => onCheck(true)}>
                 <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY} />
               </TouchableOpacity>
@@ -112,8 +96,9 @@ export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
                   color={Colors.GREEN}
                 />
               </TouchableOpacity>
-            ))}
-        </View>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );

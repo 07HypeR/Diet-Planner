@@ -16,6 +16,16 @@
     "services/FirebaseConfig.jsx",
     "services/AiModel.jsx",
     "components/home/HomeHeader.jsx",
-    "app/recipe-detail/[index].jsx"
+    "app/recipe-detail/[index].jsx",
+    "app/preferance/index.jsx",
+    "app/auth/SignUp.jsx",
+    "app/auth/SignIn.jsx",
+    "app/(tabs)/_layout.jsx",
+    "app/(tabs)/Home.jsx",
+    "app/(tabs)/Meals.jsx",
+    "app/(tabs)/Profile.jsx",
+    "app/(tabs)/Progress.jsx",
+    "app/generate-ai-recipe/index.jsx",
+    "app/index.jsx"
   ]
 }

@@ -51,7 +51,7 @@ export default function SignUp() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View
         style={{
           display: "flex",

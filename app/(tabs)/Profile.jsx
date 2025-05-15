@@ -48,11 +48,11 @@ export default function Profile() {
   const router = useRouter();
 
   const OnMenuOptionClick = (menu) => {
-    if (menu.path == "logout") {
+    if (menu.path === "logout") {
       signOut(auth).then(() => {
         console.log("Sign-out");
         setUser(null);
-        router.replace("/");
+        router.replace("/index");
       });
       return;
     }
@@ -62,7 +62,7 @@ export default function Profile() {
     <View
       style={{
         padding: 20,
-        paddingTop: Platform.OS == "ios" ? 55 : 55,
+        paddingTop: Platform.OS == "ios" ? 40 : 40,
         backgroundColor: Colors.SECONDARY,
         height: "100%",
       }}

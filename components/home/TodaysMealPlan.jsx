@@ -5,6 +5,7 @@ import Colors from "@/shared/Colors";
 import { CalendarAdd01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useConvex } from "convex/react";
+import { useRouter } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -16,6 +17,7 @@ export default function TodaysMealPlan({ selectedDate }) {
   const { user } = useContext(UserContext);
   const convex = useConvex();
   const { refreshData, setRefreshData } = useContext(RefreshDataContext);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMealPlan = async () => {
@@ -82,7 +84,10 @@ export default function TodaysMealPlan({ selectedDate }) {
               : "Today"}
           </Text>
 
-          <Button title={"Create New Meal Plan"} />
+          <Button
+            title={"Create New Meal Plan"}
+            onPress={() => router.push("/(tabs)/Meals")}
+          />
         </View>
       ) : (
         <View>

@@ -84,8 +84,6 @@ export default function Preferance() {
         ...prev,
         ...fullData,
       }));
-
-      console.log("Navigating to home");
       router.replace("/(tabs)/Home");
     } catch (err) {
       console.error("Error in OnContinue:", err);
@@ -117,6 +115,7 @@ export default function Preferance() {
         backgroundColor: Colors.WHITE,
         height: "100%",
       }}
+      showsVerticalScrollIndicator={false}
     >
       <View style={{ padding: 20 }}>
         <Text

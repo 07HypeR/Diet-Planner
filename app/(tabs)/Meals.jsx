@@ -15,7 +15,6 @@ import {
 
 export default function Meals() {
   const { user } = useContext(UserContext);
-  //@ts-ignore
   const recipeList = useQuery(api.Recipes.GetAllRecipesByUser, {
     uid: user?._id,
   });
@@ -30,7 +29,7 @@ export default function Meals() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform.OS == "ios" ? 55 : 55,
+            paddingTop: Platform.OS == "ios" ? 40 : 40,
           }}
         >
           <Text

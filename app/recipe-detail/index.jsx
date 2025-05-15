@@ -31,7 +31,7 @@ export default function RecipeDetail() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform.OS == "ios" ? 55 : 55,
+            paddingTop: Platform.OS == "ios" ? 40 : 40,
             backgroundColor: Colors.WHITE,
             height: "100%",
           }}

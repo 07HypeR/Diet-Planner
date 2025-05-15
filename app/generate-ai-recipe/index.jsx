@@ -39,10 +39,13 @@ export default function GenerateAiRecipe() {
     }
   };
   return (
-    <ScrollView style={{ backgroundColor: Colors.WHITE, height: "100%" }}>
+    <ScrollView
+      style={{ backgroundColor: Colors.WHITE, height: "100%" }}
+      showsVerticalScrollIndicator={false}
+    >
       <View
         style={{
-          paddingTop: Platform.OS == "ios" ? 55 : 55,
+          paddingTop: Platform.OS == "ios" ? 40 : 40,
           padding: 20,
         }}
       >

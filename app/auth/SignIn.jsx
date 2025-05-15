@@ -50,7 +50,7 @@ export default function SignIn() {
       });
   };
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View
         style={{
           display: "flex",

@@ -2,7 +2,7 @@ import Button from "@/components/shared/Button";
 import { GenerateRecipe } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
 import Prompt from "@/shared/Prompt";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Platform,
   ScrollView,
@@ -17,7 +17,7 @@ import RecipeOptionList from "../../components/recipe/RecipeOptionList";
 export default function GenerateAiRecipe() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [recipeOption, setRecipeOption] = useState<any[]>([]);
+  const [recipeOption, setRecipeOption] = useState();
   const GenerateRecipeOptions = async () => {
     if (loading) return;
     setLoading(true);

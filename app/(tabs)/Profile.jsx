@@ -10,7 +10,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   FlatList,
   Image,
@@ -47,19 +47,17 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
   const router = useRouter();
 
-  const OnMenuOptionClick =
-    //@ts-ignore
-    (menu) => {
-      if (menu.path == "logout") {
-        signOut(auth).then(() => {
-          console.log("Sign-out");
-          setUser(null);
-          router.replace("/");
-        });
-        return;
-      }
-      router.push(menu?.path);
-    };
+  const OnMenuOptionClick = (menu) => {
+    if (menu.path == "logout") {
+      signOut(auth).then(() => {
+        console.log("Sign-out");
+        setUser(null);
+        router.replace("/");
+      });
+      return;
+    }
+    router.push(menu?.path);
+  };
   return (
     <View
       style={{

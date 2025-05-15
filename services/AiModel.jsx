@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_OPENROUTER_API_KEY,
 });
 
-const AIMODELNAME = "google/gemma-3-12b-it:free";
+const AIMODELNAME = "deepseek/deepseek-chat:free";
 
 export const CalculateCaloriesAi = async (PROMPT) =>
   await openai.chat.completions.create({

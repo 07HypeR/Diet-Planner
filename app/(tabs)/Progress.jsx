@@ -21,7 +21,7 @@ export default function Progress() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform?.OS == "ios" ? 55 : 55,
+            paddingTop: Platform?.OS == "ios" ? 40 : 40,
           }}
         >
           <Text

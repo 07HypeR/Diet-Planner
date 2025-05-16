@@ -6,13 +6,14 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useMutation } from "convex/react";
 import { useContext } from "react";
 import {
-  Alert,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
   const UpdateStatus = useMutation(api.MealPlan.updateStatus);
@@ -25,7 +26,22 @@ export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
       calories: mealPlanInfo?.recipe?.jsonData?.calories,
       proteins: mealPlanInfo?.recipe?.jsonData?.proteins,
     });
-    Alert.alert("Great!", "Status Updated");
+
+    if (Platform.OS === "ios") {
+      Alert.alert("Great!", "Status Updated");
+    } else {
+      Toast.show({
+        type: "custom",
+        text1: "Great!",
+        text2: "Status Updated",
+        position: "bottom",
+        visibilityTime: 2500,
+        props: {
+          icon: "🤩",
+        },
+      });
+    }
+
     setRefreshData(Date.now());
   };
 

@@ -1,31 +1,12 @@
 import GanerateRecipeCard from "@/components/home/GanerateRecipeCard";
 import TodayProgress from "@/components/home/TodayProgress";
 import TodaysMealPlan from "@/components/home/TodaysMealPlan";
-import Colors from "@/shared/Colors";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Platform, Text, View } from "react-native";
 import DateSelectionCard from "../../components/shared/DateSelectionCard";
 
 export default function Progress() {
   const [selectedDate, setSelectedDate] = useState();
-  const [loading, setLoading] = useState(false);
-
-  const handleDateChange = (date) => {
-    setLoading(true);
-    setSelectedDate(date);
-
-    // Simulate data loading delay (replace with real fetch if needed)
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  };
-
   return (
     <FlatList
       data={[]}
@@ -35,7 +16,7 @@ export default function Progress() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform.OS === "ios" ? 40 : 40,
+            paddingTop: Platform?.OS == "ios" ? 55 : 55,
           }}
         >
           <Text
@@ -46,18 +27,8 @@ export default function Progress() {
           >
             Progress
           </Text>
-
-          <DateSelectionCard setSelectedDate={handleDateChange} />
-
-          {loading ? (
-            <View style={{ paddingVertical: 40 }}>
-              <ActivityIndicator size="large" color={Colors.PRIMARY} />
-            </View>
-          ) : (
-            <>
-              <TodaysMealPlan selectedDate={selectedDate} />
-            </>
-          )}
+          <DateSelectionCard setSelectedDate={setSelectedDate} />
+          <TodaysMealPlan selectedDate={selectedDate} />
           <TodayProgress />
           <GanerateRecipeCard />
         </View>

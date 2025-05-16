@@ -52,7 +52,7 @@ export default function Profile() {
       signOut(auth).then(() => {
         console.log("Sign-out");
         setUser(null);
-        router.replace("/index");
+        router.replace("/");
       });
       return;
     }

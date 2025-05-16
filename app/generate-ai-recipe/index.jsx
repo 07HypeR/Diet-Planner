@@ -2,6 +2,8 @@ import Button from "@/components/shared/Button";
 import { GenerateRecipe } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
 import Prompt from "@/shared/Prompt";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Platform,
@@ -9,12 +11,14 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import EmptyRecipeState from "../../components/recipe/EmptyRecipeState";
 import RecipeOptionList from "../../components/recipe/RecipeOptionList";
 
 export default function GenerateAiRecipe() {
+  const router = useRouter();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [recipeOption, setRecipeOption] = useState();
@@ -49,6 +53,12 @@ export default function GenerateAiRecipe() {
           padding: 20,
         }}
       >
+        <TouchableOpacity onPress={router.back} style={{ marginBottom: 10 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons name="arrow-back-outline" size={24} color="black" />
+            <Text style={{ marginLeft: 5, fontSize: 20 }}>Back</Text>
+          </View>
+        </TouchableOpacity>
         <Text
           style={{
             fontSize: 30,

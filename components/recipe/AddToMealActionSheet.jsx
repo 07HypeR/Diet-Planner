@@ -1,3 +1,4 @@
+import { RefreshDataContext } from "@/context/RefreshDataContex";
 import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
@@ -27,7 +28,7 @@ export default function AddToMealActionSheet({
 }) {
   const [selectedDate, setSelectedDate] = useState();
   const [selectedMeal, setSelectedMeal] = useState();
-  const [showAlert, setShowAlert] = useState(false);
+  const { refreshData, setRefreshData } = useContext(RefreshDataContext);
   const createMealPlan = useMutation(api.MealPlan.CreateMealPlan);
   const { user } = useContext(UserContext);
   const mealOption = [
@@ -74,6 +75,7 @@ export default function AddToMealActionSheet({
         },
       });
     }
+    setRefreshData(Date.now());
     hideActionSheet();
   };
 

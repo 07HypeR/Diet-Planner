@@ -25,10 +25,10 @@ export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
       calories: mealPlanInfo?.recipe?.jsonData?.calories,
       proteins: mealPlanInfo?.recipe?.jsonData?.proteins,
     });
-
     Alert.alert("Great!", "Status Updated");
     setRefreshData(Date.now());
   };
+
   return (
     <View
       style={{
@@ -83,22 +83,24 @@ export default function MealPlanCard({ mealPlanInfo, showCheckbox }) {
             </Text>
           </View>
         </View>
-        {showCheckbox && (
-          <View>
-            {mealPlanInfo?.mealPlan?.status != true ? (
-              <TouchableOpacity onPress={() => onCheck(true)}>
-                <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => onCheck(false)}>
-                <HugeiconsIcon
-                  icon={CheckmarkSquare02Icon}
-                  color={Colors.GREEN}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
+        <View>
+          {showCheckbox && (
+            <View>
+              {mealPlanInfo?.mealPlan?.status != true ? (
+                <TouchableOpacity onPress={() => onCheck(true)}>
+                  <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => onCheck(false)}>
+                  <HugeiconsIcon
+                    icon={CheckmarkSquare02Icon}
+                    color={Colors.GREEN}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        </View>
       </View>
     </View>
   );

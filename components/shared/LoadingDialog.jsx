@@ -1,7 +1,16 @@
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Modal, Text, View } from "react-native";
 import Colors from "../../shared/Colors";
 
-export default function LoadingDialog({ loading = false }) {
+export default function LoadingDialog({ loading = false, title = "" }) {
+  const [dots, setDots] = useState("");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length < 3 ? prev + "." : ""));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <Modal transparent visible={loading} statusBarTranslucent>
       <View
@@ -26,9 +35,12 @@ export default function LoadingDialog({ loading = false }) {
               color: Colors.WHITE,
               fontSize: 18,
               marginTop: 8,
+              textAlign: "center",
             }}
           >
-            Loading...
+            {title}
+            {dots}
+            <Text style={{ opacity: 0 }}>{".".repeat(3 - dots.length)}</Text>
           </Text>
         </View>
       </View>

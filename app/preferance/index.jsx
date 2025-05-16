@@ -23,13 +23,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import LoadingDialog from "../../components/shared/LoadingDialog";
 import { CalculateCaloriesAi } from "../../services/AiModel";
 
 export default function Preferance() {
-  const [weight, setWeight] = useState();
-  const [height, setHeight] = useState();
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
   const [gender, setGender] = useState("");
   const [goal, setGoal] = useState("");
+  const [loading, setLoading] = useState();
   const { user, setUser } = useContext(UserContext);
   const UpdateUserPref = useMutation(api.Users.UpdateUserPref);
   const router = useRouter();
@@ -47,6 +49,10 @@ export default function Preferance() {
       gender: gender,
       goal: goal,
     };
+
+    if (loading) return;
+
+    setLoading(true);
 
     //Calculate Calories using AI
     const PROMPT = JSON.stringify(data) + Prompt.CALOERIES_PROMPT;
@@ -88,6 +94,8 @@ export default function Preferance() {
     } catch (err) {
       console.error("Error in OnContinue:", err);
       Alert.alert("Something went wrong", err.message || "Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
   //   const AIResult = await CalculateCaloriesAi(PROMPT);
@@ -265,6 +273,7 @@ export default function Preferance() {
         <View style={{ marginTop: 25 }}>
           <Button title={"Continue"} onPress={OnContinue} />
         </View>
+        <LoadingDialog loading={loading} title="Please wait" />
       </View>
     </ScrollView>
   );

@@ -88,7 +88,7 @@ export default function RecipeOptionList({ RecipeOption }) {
           </TouchableOpacity>
         ))}
       </View>
-      <LoadingDialog loading={loading} />
+      <LoadingDialog loading={loading} title="Loading" />
     </View>
   );
 }

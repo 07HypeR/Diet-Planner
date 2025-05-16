@@ -22,6 +22,7 @@ export default function SignUp() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   const onSignUp = () => {
@@ -38,6 +39,7 @@ export default function SignUp() {
             name: name,
             email: email,
           });
+          setLoading(true);
           console.log(result);
           setUser(result);
           router.replace("/(tabs)/Home");
@@ -47,6 +49,7 @@ export default function SignUp() {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
+        setLoading(false);
       });
   };
 
@@ -85,7 +88,11 @@ export default function SignUp() {
           />
         </View>
         <View style={{ width: "100%", marginTop: 15 }}>
-          <Button title={"Create Account"} onPress={() => onSignUp()} />
+          <Button
+            title={"Create Account"}
+            onPress={() => onSignUp()}
+            loading={loading}
+          />
 
           <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
             Already have an account?

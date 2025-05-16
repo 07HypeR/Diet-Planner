@@ -139,6 +139,19 @@ export default function Profile() {
           </TouchableOpacity>
         )}
       />
+
+      {/* Footer */}
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 40,
+        }}
+      >
+        <Text style={{ fontSize: 20, color: Colors.GRAY, fontWeight: "bold" }}>
+          Made with ❤️ by Abhik
+        </Text>
+      </View>
     </View>
   );
 }

@@ -1,6 +1,7 @@
 import GanerateRecipeCard from "@/components/home/GanerateRecipeCard";
 import TodayProgress from "@/components/home/TodayProgress";
 import TodaysMealPlan from "@/components/home/TodaysMealPlan";
+import Colors from "@/shared/Colors";
 import React, { useState } from "react";
 import { FlatList, Platform, Text, View } from "react-native";
 import DateSelectionCard from "../../components/shared/DateSelectionCard";
@@ -10,6 +11,10 @@ export default function Progress() {
   return (
     <FlatList
       data={[]}
+      style={{
+        backgroundColor: Colors.SECONDARY,
+        height: "100%",
+      }}
       renderItem={() => null}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={

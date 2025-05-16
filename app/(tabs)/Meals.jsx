@@ -25,6 +25,10 @@ export default function Meals() {
       data={[]}
       renderItem={() => null}
       showsVerticalScrollIndicator={false}
+      style={{
+        backgroundColor: Colors.SECONDARY,
+        height: "100%",
+      }}
       ListHeaderComponent={
         <View
           style={{

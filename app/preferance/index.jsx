@@ -3,7 +3,6 @@ import Input from "@/components/shared/Input";
 import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
-import Prompt from "@/shared/Prompt";
 import {
   Dumbbell01Icon,
   FemaleSymbolFreeIcons,
@@ -25,12 +24,13 @@ import {
 } from "react-native";
 import LoadingDialog from "../../components/shared/LoadingDialog";
 import { CalculateCaloriesAi } from "../../services/AiModel";
+import Prompt from "../../shared/Prompt";
 
 export default function Preferance() {
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("");
-  const [goal, setGoal] = useState("");
+  const [weight, setWeight] = useState();
+  const [height, setHeight] = useState();
+  const [gender, setGender] = useState();
+  const [goal, setGoal] = useState();
   const [loading, setLoading] = useState();
   const { user, setUser } = useContext(UserContext);
   const UpdateUserPref = useMutation(api.Users.UpdateUserPref);
@@ -49,73 +49,32 @@ export default function Preferance() {
       gender: gender,
       goal: goal,
     };
-
-    if (loading) return;
-
     setLoading(true);
 
     //Calculate Calories using AI
     const PROMPT = JSON.stringify(data) + Prompt.CALOERIES_PROMPT;
     console.log(PROMPT);
-    try {
-      const AIResult = await CalculateCaloriesAi(PROMPT);
-      const AIResp = AIResult.choices[0].message.content;
-      const jsonMatch = AIResp.match(/```json([\s\S]*?)```/);
-      let JSONContent = {};
 
-      if (jsonMatch && jsonMatch[1]) {
-        try {
-          JSONContent = JSON.parse(jsonMatch[1].trim());
-        } catch (err) {
-          console.error("Failed to parse JSON:", err);
-          Alert.alert(
-            "Error",
-            "Could not parse AI response. Please try again."
-          );
-          return;
-        }
-      } else {
-        console.warn("JSON block not found in AI response");
-        Alert.alert("Error", "No valid JSON found in AI response");
-        return;
-      }
+    const AIResult = await CalculateCaloriesAi(PROMPT);
+    console.log(AIResult.choices[0].message.content);
+    const AIResp = AIResult.choices[0].message.content;
+    console.log(AIResp);
+    const JSONContent = JSON.parse(
+      AIResp?.replace("```json", "").replace("```", "")
+    );
+    console.log(JSONContent);
+    const result = await UpdateUserPref({
+      ...data,
+      ...JSONContent,
+    });
 
-      const fullData = { ...data, ...JSONContent };
-      console.log(JSONContent);
-
-      const result = await UpdateUserPref(fullData);
-      console.log("UpdateUserPref result:", result);
-
-      setUser((prev) => ({
-        ...prev,
-        ...fullData,
-      }));
-      router.replace("/(tabs)/Home");
-    } catch (err) {
-      console.error("Error in OnContinue:", err);
-      Alert.alert("Something went wrong", err.message || "Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    setUser((prev) => ({
+      ...prev,
+      ...data,
+    }));
+    router.replace("/(tabs)/Home");
+    setLoading(false);
   };
-  //   const AIResult = await CalculateCaloriesAi(PROMPT);
-  //   console.log(AIResult.choices[0].message.content);
-  //   const AIResp = AIResult.choices[0].message.content;
-  //   const JSONContent = JSON.parse(
-  //     AIResp?.replace("```json", "").replace("```", "")
-  //   );
-  //   console.log(JSONContent);
-  //   const result = await UpdateUserPref({
-  //     ...data,
-  //     ...JSONContent,
-  //   });
-
-  //   setUser((prev) => ({
-  //     ...prev,
-  //     ...data,
-  //   }));
-  //   router.replace("/(tabs)/Home");
-  // };
 
   return (
     <ScrollView

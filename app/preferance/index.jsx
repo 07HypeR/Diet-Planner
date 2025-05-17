@@ -56,13 +56,16 @@ export default function Preferance() {
     console.log(PROMPT);
 
     const AIResult = await CalculateCaloriesAi(PROMPT);
-    console.log(AIResult.choices[0].message.content);
+    const aiResponse =
+      AIResult.data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
-    const AIResp = AIResult.choices[0].message.content;
+    const jsonMatch = aiResponse.match(/```json\n([\s\S]*?)\n```/);
+    if (!jsonMatch) {
+      throw new Error("Ai response dose not contain JSON");
+    }
 
-    // Extract the first JSON block from the AI response
-    const jsonMatch = AIResp.match(/\{[\s\S]*?\}/);
-    const JSONContent = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+    const jsonString = jsonMatch[1];
+    const JSONContent = JSON.parse(jsonString);
 
     console.log(JSONContent);
 
@@ -78,6 +81,7 @@ export default function Preferance() {
 
     router.replace("/(tabs)/Home");
     setLoading(false);
+    return result;
   };
 
   return (

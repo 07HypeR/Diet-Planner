@@ -30,10 +30,15 @@ export default function GenerateAiRecipe() {
       const PROMPT = input + Prompt.GENERATE_RECIPE_OPTION_PROMPT;
       const result = await GenerateRecipe(PROMPT);
       // console.log(result.choices[0].message);
-      const extractJson = result.choices[0].message.content
-        ?.replace("```json", "")
-        .replace("```", "");
-      const parsedJsonResp = JSON.parse(extractJson ?? "{}");
+      const extractJson =
+        result.data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+      const jsonMatch = extractJson.match(/```json\n([\s\S]*?)\n```/);
+      if (!jsonMatch) {
+        throw new Error("Ai response dose not contain JSON");
+      }
+      const jsonString = jsonMatch[1];
+      const parsedJsonResp = JSON.parse(jsonString ?? "{}");
+
       console.log(parsedJsonResp);
       setRecipeOption(parsedJsonResp);
       setLoading(false);

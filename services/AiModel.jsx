@@ -8,14 +8,14 @@ const openai = new OpenAI({
 
 export const CalculateCaloriesAi = async (PROMPT) =>
   await openai.chat.completions.create({
-    model: "google/gemini-2.0-flash-exp:free",
+    model: "deepseek/deepseek-r1:free",
     messages: [{ role: "user", content: PROMPT }],
     response_format: "json_object",
   });
 
 export const GenerateRecipe = async (PROMPT) =>
   await openai.chat.completions.create({
-    model: "google/gemma-3-12b-it:free",
+    model: "deepseek/deepseek-chat:free",
     messages: [{ role: "user", content: PROMPT }],
     response_format: "json_object",
   });

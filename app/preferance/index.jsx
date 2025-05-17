@@ -57,12 +57,15 @@ export default function Preferance() {
 
     const AIResult = await CalculateCaloriesAi(PROMPT);
     console.log(AIResult.choices[0].message.content);
+
     const AIResp = AIResult.choices[0].message.content;
-    console.log(AIResp);
-    const JSONContent = JSON.parse(
-      AIResp?.replace("```json", "").replace("```", "")
-    );
+
+    // Extract the first JSON block from the AI response
+    const jsonMatch = AIResp.match(/\{[\s\S]*?\}/);
+    const JSONContent = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+
     console.log(JSONContent);
+
     const result = await UpdateUserPref({
       ...data,
       ...JSONContent,
@@ -72,6 +75,7 @@ export default function Preferance() {
       ...prev,
       ...data,
     }));
+
     router.replace("/(tabs)/Home");
     setLoading(false);
   };

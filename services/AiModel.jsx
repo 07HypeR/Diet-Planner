@@ -6,18 +6,16 @@ const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_OPENROUTER_API_KEY,
 });
 
-const AIMODELNAME = "deepseek/deepseek-chat:free";
-
 export const CalculateCaloriesAi = async (PROMPT) =>
   await openai.chat.completions.create({
-    model: AIMODELNAME,
+    model: "google/gemini-2.0-flash-exp:free",
     messages: [{ role: "user", content: PROMPT }],
     response_format: "json_object",
   });
 
 export const GenerateRecipe = async (PROMPT) =>
   await openai.chat.completions.create({
-    model: AIMODELNAME,
+    model: "google/gemma-3-12b-it:free",
     messages: [{ role: "user", content: PROMPT }],
     response_format: "json_object",
   });

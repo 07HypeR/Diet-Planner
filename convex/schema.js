@@ -12,8 +12,8 @@ export default defineSchema({
     weight: v.optional(v.string()),
     gender: v.optional(v.string()),
     goal: v.optional(v.string()),
-    calories: v.optional(v.number()),
-    proteins: v.optional(v.number()),
+    calories: v.optional(v.float64()),
+    proteins: v.optional(v.float64()),
   }),
 
   recipes: defineTable({

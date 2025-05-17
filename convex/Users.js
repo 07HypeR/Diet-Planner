@@ -47,8 +47,8 @@ export const UpdateUserPref = mutation({
     weight: v.string(),
     gender: v.string(),
     goal: v.string(),
-    calories: v.number(),
-    proteins: v.number(),
+    calories: v.float64(),
+    proteins: v.float64(),
   },
   handler: async (ctx, args) => {
     const result = await ctx.db.patch(args.uid, {

@@ -42,16 +42,27 @@ export const GetUser = query({
 
 export const UpdateUserPref = mutation({
   args: {
-    uid: v.id("users"),
     height: v.string(),
     weight: v.string(),
     gender: v.string(),
     goal: v.string(),
-    calories: v.float64(),
-    proteins: v.float64(),
+    calories: v.optional(v.float64()),
+    proteins: v.optional(v.float64()),
+    email: v.string(),
   },
   handler: async (ctx, args) => {
-    const result = await ctx.db.patch(args.uid, {
+    // 1. Look up user by email
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .unique();
+
+    if (!user) {
+      throw new Error("User not found with email: " + args.email);
+    }
+
+    // 2. Patch by ID
+    return await ctx.db.patch(user._id, {
       height: args.height,
       weight: args.weight,
       goal: args.goal,
@@ -59,6 +70,21 @@ export const UpdateUserPref = mutation({
       calories: args.calories,
       proteins: args.proteins,
     });
-    return result;
+  },
+});
+
+export const GetUserByEmail = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .unique();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
   },
 });

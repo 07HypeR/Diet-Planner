@@ -14,7 +14,7 @@ export default defineSchema({
     goal: v.optional(v.string()),
     calories: v.optional(v.float64()),
     proteins: v.optional(v.float64()),
-  }),
+  }).index("by_email", ["email"]),
 
   recipes: defineTable({
     jsonData: v.any(),

@@ -1,3 +1,4 @@
+import Colors from "@/shared/Colors";
 import React from "react";
 import { Text, TextInput, View } from "react-native";
 
@@ -23,7 +24,7 @@ export default function Input({
           paddingVertical: 20,
           width: "100%",
           marginTop: 2,
-          color: "#00000",
+          color: "#3a6b33",
         }}
       />
     </View>

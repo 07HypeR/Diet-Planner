@@ -82,7 +82,7 @@ export default function GenerateAiRecipe() {
           Generate Personalized recipes using AI
         </Text>
         <TextInput
-          style={styles.textArea}
+          style={[styles.textArea, { color: "#3a6b33" }]}
           placeholder="Enter your ingrdient or recipe name"
           placeholderTextColor={"#ccc"}
           onChangeText={(value) => setInput(value)}

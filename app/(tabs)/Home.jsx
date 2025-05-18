@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!hasRedirected.current && user && !user.weight) {
-      hasRedirected.current = true;
+      hasRedirected.current = false;
       router.replace("/preferance");
     }
   }, [user]);

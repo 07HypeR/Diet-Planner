@@ -16,16 +16,26 @@ export default function Index() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userInfo) => {
-      console.log(userInfo?.email);
-      const userData = await convex.query(api.Users.GetUser, {
-        email: userInfo?.email,
-      });
-      console.log(userData);
+      if (userInfo && userInfo.emailVerified) {
+        console.log("Authenticated & Verified:", userInfo.email);
 
-      setUser(userData);
+        const userData = await convex.query(api.Users.GetUser, {
+          email: userInfo.email,
+        });
 
-      router.replace("/(tabs)/Home");
+        console.log(userData);
+        setUser(userData);
+
+        router.replace("/(tabs)/Home");
+      } else {
+        if (userInfo && !userInfo.emailVerified) {
+          console.log("Email not verified. Staying on auth screen.");
+        } else {
+          console.log("No user logged in.");
+        }
+      }
     });
+
     return () => unsubscribe();
   }, []);
 

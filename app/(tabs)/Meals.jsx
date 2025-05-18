@@ -75,7 +75,7 @@ export default function Meals() {
                     textAlign: "center",
                   }}
                 >
-                  No delicious recipes yet!
+                  🥕 "Oops! No recipe here yet
                 </Text>
                 <Text
                   style={{

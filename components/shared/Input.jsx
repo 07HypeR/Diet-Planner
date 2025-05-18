@@ -23,6 +23,7 @@ export default function Input({
           paddingVertical: 20,
           width: "100%",
           marginTop: 2,
+          color: "#00000",
         }}
       />
     </View>

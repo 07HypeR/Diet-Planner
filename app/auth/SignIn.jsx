@@ -20,7 +20,6 @@ export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [loading, setLoading] = useState(false);
   const convex = useConvex();
   const { user, setUser } = useContext(UserContext);
   const onSignIn = async () => {
@@ -37,7 +36,6 @@ export default function SignIn() {
           email: email,
         });
         console.log(userData);
-        setLoading(true);
         setUser(userData);
         router.replace("/(tabs)/Home");
       })
@@ -45,7 +43,6 @@ export default function SignIn() {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
-        setLoading(false);
         Alert.alert(
           "Incorrect Email & Password",
           "Please enter valid email & password"
@@ -86,11 +83,7 @@ export default function SignIn() {
           />
         </View>
         <View style={{ width: "100%", marginTop: 15 }}>
-          <Button
-            title={"Sign In"}
-            onPress={() => onSignIn()}
-            loading={loading}
-          />
+          <Button title={"Sign In"} onPress={() => onSignIn()} />
 
           <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
             Don't have an account?

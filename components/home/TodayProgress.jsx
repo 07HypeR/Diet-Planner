@@ -31,7 +31,10 @@ export default function TodayProgress() {
   const [scaleProteinIcon] = useState(new Animated.Value(1));
 
   useEffect(() => {
-    user && GetTotalCaloriesConsumed() && GetTotalProteinsConsumed();
+    if (user) {
+      GetTotalCaloriesConsumed();
+      GetTotalProteinsConsumed();
+    }
   }, [user, refreshData]);
 
   const fadeInOut = (fadeAnim) => {

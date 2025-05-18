@@ -4,18 +4,16 @@ import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import {
-  Dumbbell01Icon,
-  FemaleSymbolFreeIcons,
-  MaleSymbolIcon,
-  PlusSignSquareIcon,
-  WeightScaleIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useMutation } from "convex/react";
+  FontAwesome6,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import { useConvex, useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import {
   Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,6 +33,7 @@ export default function Preferance() {
   const { user, setUser } = useContext(UserContext);
   const UpdateUserPref = useMutation(api.Users.UpdateUserPref);
   const router = useRouter();
+  const convex = useConvex();
 
   const OnContinue = async () => {
     if (!weight || !height || !gender) {
@@ -42,57 +41,102 @@ export default function Preferance() {
       return;
     }
 
-    const data = {
-      uid: user?._id,
-      weight: weight,
-      height: height,
-      gender: gender,
-      goal: goal,
-    };
+    if (loading) return;
+
     setLoading(true);
 
-    //Calculate Calories using AI
-    const PROMPT = JSON.stringify(data) + Prompt.CALOERIES_PROMPT;
-    console.log(PROMPT);
+    const data = {
+      email: user?.email,
+      weight,
+      height,
+      gender,
+      goal,
+    };
 
-    const AIResult = await CalculateCaloriesAi(PROMPT);
-    const aiResponse =
-      AIResult.data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+    try {
+      const PROMPT = JSON.stringify(data) + Prompt.CALOERIES_PROMPT;
+      const AIResult = await CalculateCaloriesAi(PROMPT);
 
-    const jsonMatch = aiResponse.match(/```json\n([\s\S]*?)\n```/);
-    if (!jsonMatch) {
-      throw new Error("Ai response dose not contain JSON");
+      const aiResponse =
+        AIResult.data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+
+      const jsonMatch = aiResponse.match(/```json\n([\s\S]*?)\n```/);
+      if (!jsonMatch) {
+        throw new Error("AI response does not contain JSON");
+      }
+
+      const jsonString = jsonMatch[1];
+      const JSONContent = JSON.parse(jsonString);
+
+      console.log("AI JSON Content:", JSONContent);
+
+      // Save to DB with full data
+      await UpdateUserPref({
+        ...data,
+        ...JSONContent,
+      });
+
+      // ✅ Refetch full, latest user
+      const latestUser = await convex.query(api.Users.GetUserByEmail, {
+        email: user?.email,
+      });
+
+      setUser(latestUser);
+
+      // Navigate
+      router.replace("/(tabs)/Home");
+    } catch (error) {
+      console.error("Update failed:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    const jsonString = jsonMatch[1];
-    const JSONContent = JSON.parse(jsonString);
-
-    console.log(JSONContent);
-
-    const result = await UpdateUserPref({
-      ...data,
-      ...JSONContent,
-    });
-
-    setUser((prev) => ({
-      ...prev,
-      ...data,
-    }));
-
-    router.replace("/(tabs)/Home");
-    setLoading(false);
-    return result;
   };
 
   return (
     <ScrollView
       style={{
-        backgroundColor: Colors.WHITE,
+        backgroundColor: Colors.SECONDARY,
         height: "100%",
       }}
       showsVerticalScrollIndicator={false}
     >
       <View style={{ padding: 20 }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("../../assets/images/logo.png")}
+              style={{
+                height: 100,
+                width: 100,
+                marginTop: 8,
+              }}
+            />
+            <Text
+              style={{
+                color: Colors.PRIMARY,
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              Set Your Preferences
+            </Text>
+          </View>
+        </View>
         <Text
           style={{
             textAlign: "center",
@@ -112,15 +156,21 @@ export default function Preferance() {
         >
           This help us create your personalized meal plan
         </Text>
-        <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <View style={{ flex: 1 }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 10,
+          }}
+        >
+          <View style={{ display: "flex", width: "49%" }}>
             <Input
               placeholder={"e.g 70"}
               lable="Weight (kg)"
               onChangeText={setWeight}
             />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ display: "flex", width: "49%" }}>
             <Input
               placeholder={"e.g 5.10"}
               lable="Height (ft)"
@@ -154,11 +204,16 @@ export default function Preferance() {
                 alignItems: "center",
               }}
             >
-              <HugeiconsIcon
-                icon={MaleSymbolIcon}
-                size={40}
-                color={Colors.BLUE}
-              />
+              <Ionicons name="male-outline" size={40} color={Colors.BLUE} />
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginTop: 5,
+                  fontWeight: "500",
+                }}
+              >
+                Male
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setGender("Female")}
@@ -171,11 +226,16 @@ export default function Preferance() {
                 alignItems: "center",
               }}
             >
-              <HugeiconsIcon
-                icon={FemaleSymbolFreeIcons}
-                size={40}
-                color={Colors.PINK}
-              />
+              <Ionicons name="female-outline" size={40} color={Colors.PINK} />
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginTop: 5,
+                  fontWeight: "500",
+                }}
+              >
+                Female
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -194,29 +254,22 @@ export default function Preferance() {
               },
             ]}
           >
-            <HugeiconsIcon icon={WeightScaleIcon} />
+            <View
+              style={{
+                backgroundColor: "#fae3e5",
+                borderRadius: 99,
+                height: 35,
+                width: 35,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FontAwesome6 name="weight-scale" size={18} color={Colors.RED} />
+            </View>
             <View>
               <Text style={styles.goalText}>Weight Loss</Text>
               <Text style={styles.goalSubText}>
                 Reduce body fat & get leaner
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setGoal("Muscle Gain")}
-            style={[
-              styles.goalContainer,
-              {
-                borderColor:
-                  goal == "Muscle Gain" ? Colors.PRIMARY : Colors.GRAY,
-              },
-            ]}
-          >
-            <HugeiconsIcon icon={Dumbbell01Icon} />
-            <View>
-              <Text style={styles.goalText}>Muscle Gain</Text>
-              <Text style={styles.goalSubText}>
-                Build Muscle & get Stronger
               </Text>
             </View>
           </TouchableOpacity>
@@ -230,17 +283,65 @@ export default function Preferance() {
               },
             ]}
           >
-            <HugeiconsIcon icon={PlusSignSquareIcon} />
+            <View
+              style={{
+                backgroundColor: "#e3e9ff",
+                borderRadius: 99,
+                height: 35,
+                width: 35,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="silverware-fork-knife"
+                size={19}
+                color={Colors.BLUE}
+              />
+            </View>
             <View>
               <Text style={styles.goalText}>Weight Gain</Text>
               <Text style={styles.goalSubText}>Increase healthy body mass</Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setGoal("Muscle Gain")}
+            style={[
+              styles.goalContainer,
+              {
+                borderColor:
+                  goal == "Muscle Gain" ? Colors.PRIMARY : Colors.GRAY,
+              },
+            ]}
+          >
+            <View
+              style={{
+                backgroundColor: "#dcfae7",
+                borderRadius: 99,
+                height: 35,
+                width: 35,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FontAwesome6 name="dumbbell" size={18} color={Colors.GREEN} />
+            </View>
+            <View>
+              <Text style={styles.goalText}>Muscle Gain</Text>
+              <Text style={styles.goalSubText}>
+                Build Muscle & get Stronger
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <View style={{ marginTop: 25 }}>
-          <Button title={"Continue"} onPress={OnContinue} />
+        <View style={{ marginTop: 50 }}>
+          <Button
+            title={"Continue"}
+            onPress={OnContinue}
+            icon="arrow-forward"
+          />
         </View>
-        <LoadingDialog loading={loading} title="Please wait" />
+        <LoadingDialog loading={loading} title="Loading" />
       </View>
     </ScrollView>
   );

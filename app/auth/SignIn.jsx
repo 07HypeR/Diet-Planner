@@ -27,6 +27,7 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 if (
   Platform.OS === "android" &&
@@ -43,6 +44,7 @@ export default function SignIn() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [unverifiedUser, setUnverifiedUser] = useState(null);
   const [failedAttempt, setFailedAttempt] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   const convex = useConvex();
   const createNewUser = useMutation(api.Users.CreateNewUser);
@@ -205,8 +207,19 @@ export default function SignIn() {
               <Input placeholder="Email" onChangeText={setEmail} />
               <Input
                 placeholder="Password"
-                password
+                password={!showPassword}
                 onChangeText={setPassword}
+                rightIcon={
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={24}
+                      color="#999"
+                    />
+                  </TouchableOpacity>
+                }
               />
             </View>
 

@@ -25,6 +25,7 @@ import {
   LayoutAnimation,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function SignUp() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const showToastOrAlert = (title, message, icon) => {
     if (Platform.OS === "ios") {
@@ -133,10 +135,23 @@ export default function SignUp() {
             <View style={{ width: "100%", marginTop: 20 }}>
               <Input placeholder="Name" onChangeText={setName} />
               <Input placeholder="Email" onChangeText={setEmail} />
+
+              {/* Password Input with toggle */}
               <Input
                 placeholder="Password"
-                password
+                password={!showPassword}
                 onChangeText={setPassword}
+                rightIcon={
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={24}
+                      color="#999"
+                    />
+                  </TouchableOpacity>
+                }
               />
             </View>
 

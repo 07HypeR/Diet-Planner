@@ -15,13 +15,25 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  LayoutAnimation,
   Platform,
   ScrollView,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  UIManager,
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function SignIn() {
   const router = useRouter();
@@ -77,9 +89,7 @@ export default function SignIn() {
         return;
       }
 
-      const userData = await convex.query(api.Users.GetUser, {
-        email: email,
-      });
+      const userData = await convex.query(api.Users.GetUser, { email });
 
       let finalUserData = userData;
       if (!userData) {
@@ -152,93 +162,127 @@ export default function SignIn() {
   useEffect(() => {
     let timer;
     if (resendCooldown > 0) {
-      timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      timer = setTimeout(() => setResendCooldown((prev) => prev - 1), 1000);
     }
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
+  useEffect(() => {
+    const showListener = Keyboard.addListener("keyboardWillShow", () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    });
+    const hideListener = Keyboard.addListener("keyboardWillHide", () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    });
+
+    return () => {
+      showListener.remove();
+      hideListener.remove();
+    };
+  }, []);
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ display: "flex", alignItems: "center", padding: 25 }}>
-        <Image
-          source={require("./../../assets/images/logo.png")}
-          style={{ width: 150, height: 150, marginTop: 60 }}
-        />
-        <Text style={{ fontSize: 35, fontWeight: "bold" }}>Welcome Back</Text>
-        <View style={{ width: "100%", marginTop: 20 }}>
-          <Input placeholder="Email" onChangeText={setEmail} />
-          <Input placeholder="Password" password onChangeText={setPassword} />
-        </View>
-
-        {failedAttempt >= 1 && (
-          <View style={{ width: "100%", marginTop: 10 }}>
-            <TouchableOpacity onPress={forgotPassword}>
-              <Text
-                style={{
-                  color: "#007AFF",
-                  textAlign: "right",
-                  fontWeight: "500",
-                }}
-              >
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        <View style={{ width: "100%", marginTop: 15 }}>
-          <Button
-            title={loading ? "Signing In..." : "Sign In"}
-            onPress={onSignIn}
-            disabled={loading}
-          />
-          {loading && (
-            <ActivityIndicator
-              size="large"
-              color="#007AFF"
-              style={{ marginTop: 10 }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ flex: 1, alignItems: "center", padding: 25 }}>
+            <Image
+              source={require("./../../assets/images/logo.png")}
+              style={{ width: 150, height: 150, marginTop: 60 }}
             />
-          )}
+            <Text style={{ fontSize: 35, fontWeight: "bold" }}>
+              Welcome Back
+            </Text>
 
-          {unverifiedUser && (
-            <View style={{ marginTop: 20 }}>
-              <TouchableOpacity
-                onPress={resendVerificationEmail}
-                disabled={resendCooldown > 0}
+            <View style={{ width: "100%", marginTop: 20 }}>
+              <Input placeholder="Email" onChangeText={setEmail} />
+              <Input
+                placeholder="Password"
+                password
+                onChangeText={setPassword}
+              />
+            </View>
+
+            {failedAttempt >= 1 && (
+              <View style={{ width: "100%", marginTop: 10 }}>
+                <TouchableOpacity onPress={forgotPassword}>
+                  <Text
+                    style={{
+                      color: "#007AFF",
+                      textAlign: "right",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={{ width: "100%", marginTop: 15 }}>
+              <Button
+                title={loading ? "Signing In..." : "Sign In"}
+                onPress={onSignIn}
+                disabled={loading}
+              />
+              {loading && (
+                <ActivityIndicator
+                  size="large"
+                  color="#007AFF"
+                  style={{ marginTop: 10 }}
+                />
+              )}
+
+              {unverifiedUser && (
+                <View style={{ marginTop: 20 }}>
+                  <TouchableOpacity
+                    onPress={resendVerificationEmail}
+                    disabled={resendCooldown > 0}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 16,
+                        color: resendCooldown > 0 ? "gray" : "#007AFF",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {resendCooldown > 0
+                        ? `Resend in ${resendCooldown}s`
+                        : "Resend Verification Email"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <Text
+                style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}
               >
+                Don't have an account?
+              </Text>
+              <TouchableOpacity onPress={() => router.push("/auth/SignUp")}>
                 <Text
                   style={{
                     textAlign: "center",
                     fontSize: 16,
-                    color: resendCooldown > 0 ? "gray" : "#007AFF",
+                    marginTop: 5,
                     fontWeight: "bold",
                   }}
                 >
-                  {resendCooldown > 0
-                    ? `Resend in ${resendCooldown}s`
-                    : "Resend Verification Email"}
+                  Create New Account
                 </Text>
               </TouchableOpacity>
             </View>
-          )}
-
-          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
-            Don't have an account?
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/auth/SignUp")}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 16,
-                marginTop: 5,
-                fontWeight: "bold",
-              }}
-            >
-              Create New Account
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }

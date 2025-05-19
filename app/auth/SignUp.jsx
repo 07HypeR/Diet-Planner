@@ -9,16 +9,20 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
   Platform,
   ScrollView,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  UIManager,
+  LayoutAnimation,
 } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -80,56 +84,97 @@ export default function SignUp() {
       router.replace("/auth/SignIn");
     } catch (error) {
       console.log("SignUp Error:", error.message);
-      showToastOrAlert("Sign Up Failed", error.message, "❌");
+      showToastOrAlert("Sign Up Failed", "Email address already exists", "❌");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ display: "flex", alignItems: "center", padding: 25 }}>
-        <Image
-          source={require("./../../assets/images/logo.png")}
-          style={{ width: 150, height: 150, marginTop: 60 }}
-        />
-        <Text style={{ fontSize: 35, fontWeight: "bold" }}>Create Account</Text>
-        <View style={{ width: "100%", marginTop: 20 }}>
-          <Input placeholder="Name" onChangeText={setName} />
-          <Input placeholder="Email" onChangeText={setEmail} />
-          <Input placeholder="Password" password onChangeText={setPassword} />
-        </View>
-        <View style={{ width: "100%", marginTop: 15 }}>
-          <Button
-            title={loading ? "Creating Account..." : "Sign Up"}
-            onPress={onSignUp}
-            disabled={loading}
-          />
-          {loading && (
-            <ActivityIndicator
-              size="large"
-              color="#007AFF"
-              style={{ marginTop: 10 }}
-            />
-          )}
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      UIManager.setLayoutAnimationEnabledExperimental &&
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
 
-          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}>
-            Already have an account?
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/auth/SignIn")}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 16,
-                marginTop: 5,
-                fontWeight: "bold",
-              }}
-            >
-              Sign In Here
+    const showSub = Keyboard.addListener("keyboardWillShow", () =>
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    );
+    const hideSub = Keyboard.addListener("keyboardWillHide", () =>
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    );
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={{ flex: 1, alignItems: "center", padding: 25 }}>
+            <Image
+              source={require("./../../assets/images/logo.png")}
+              style={{ width: 150, height: 150, marginTop: 60 }}
+            />
+            <Text style={{ fontSize: 35, fontWeight: "bold" }}>
+              Create Account
             </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+
+            <View style={{ width: "100%", marginTop: 20 }}>
+              <Input placeholder="Name" onChangeText={setName} />
+              <Input placeholder="Email" onChangeText={setEmail} />
+              <Input
+                placeholder="Password"
+                password
+                onChangeText={setPassword}
+              />
+            </View>
+
+            <View style={{ width: "100%", marginTop: 15 }}>
+              <Button
+                title={loading ? "Creating Account..." : "Sign Up"}
+                onPress={onSignUp}
+                disabled={loading}
+              />
+              {loading && (
+                <ActivityIndicator
+                  size="large"
+                  color="#007AFF"
+                  style={{ marginTop: 10 }}
+                />
+              )}
+
+              <Text
+                style={{ textAlign: "center", fontSize: 16, marginTop: 15 }}
+              >
+                Already have an account?
+              </Text>
+              <TouchableOpacity onPress={() => router.back()}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 16,
+                    marginTop: 5,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sign In Here
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }

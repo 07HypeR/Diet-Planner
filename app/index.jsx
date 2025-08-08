@@ -46,7 +46,7 @@ export default function Index() {
       }}
     >
       <Image
-        source={require("../assets/images/Landing.png")}
+        source={require("../assets/images/landing.png")}
         style={{
           width: "100%",
           height: Dimensions.get("screen").height,

@@ -5,13 +5,7 @@ import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { useQuery } from "convex/react";
 import React, { useContext } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 export default function Meals() {
   const { user } = useContext(UserContext);
@@ -33,7 +27,7 @@ export default function Meals() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform.OS == "ios" ? 40 : 40,
+            paddingTop: 55,
           }}
         >
           <Text

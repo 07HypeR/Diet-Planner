@@ -1,3 +1,4 @@
+import Colors from "@/shared/Colors";
 import React from "react";
 import { Text, TextInput, View, StyleSheet } from "react-native";
 
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingRight: 45,
     paddingVertical: 20,
     width: "100%",
-    color: "#3a6b33",
+    color: Colors.PRIMARY,
   },
   icon: {
     position: "absolute",

@@ -87,7 +87,7 @@ export default function GenerateAiRecipe() {
         >
           <View
             style={{
-              paddingTop: Platform.OS === "ios" ? 40 : 40,
+              paddingTop: 55,
               padding: 20,
             }}
           >
@@ -118,7 +118,7 @@ export default function GenerateAiRecipe() {
               Generate Personalized recipes using AI
             </Text>
             <TextInput
-              style={[styles.textArea, { color: "#3a6b33" }]}
+              style={[styles.textArea, { color: Colors.PRIMARY }]}
               placeholder="Enter your ingrdient or recipe name"
               placeholderTextColor={"#ccc"}
               onChangeText={(value) => setInput(value)}

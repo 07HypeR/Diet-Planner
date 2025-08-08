@@ -3,7 +3,7 @@ import TodayProgress from "@/components/home/TodayProgress";
 import TodaysMealPlan from "@/components/home/TodaysMealPlan";
 import Colors from "@/shared/Colors";
 import React, { useState } from "react";
-import { FlatList, Platform, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import DateSelectionCard from "../../components/shared/DateSelectionCard";
 
 export default function Progress() {
@@ -21,7 +21,7 @@ export default function Progress() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform?.OS == "ios" ? 40 : 40,
+            paddingTop: 55,
           }}
         >
           <Text

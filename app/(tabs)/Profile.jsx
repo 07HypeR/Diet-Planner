@@ -11,14 +11,7 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
-import {
-  FlatList,
-  Image,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
 const MenuOption = [
   {
@@ -62,7 +55,7 @@ export default function Profile() {
     <View
       style={{
         padding: 20,
-        paddingTop: Platform.OS == "ios" ? 40 : 40,
+        paddingTop: 55,
         backgroundColor: Colors.SECONDARY,
         height: "100%",
       }}

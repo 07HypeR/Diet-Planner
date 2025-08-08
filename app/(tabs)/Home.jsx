@@ -6,7 +6,7 @@ import { UserContext } from "@/context/UserContext";
 import Colors from "@/shared/Colors";
 import { useRouter } from "expo-router";
 import React, { useContext, useEffect, useRef } from "react";
-import { FlatList, Platform, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 export default function Home() {
   const { user } = useContext(UserContext);
@@ -29,9 +29,7 @@ export default function Home() {
       }}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={
-        <View
-          style={{ padding: 20, marginTop: Platform.OS === "ios" ? 40 : 40 }}
-        >
+        <View style={{ padding: 20, marginTop: 55 }}>
           <HomeHeader />
           <TodayProgress />
           <GanerateRecipeCard />

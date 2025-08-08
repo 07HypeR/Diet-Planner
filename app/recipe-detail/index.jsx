@@ -7,7 +7,7 @@ import Colors from "@/shared/Colors";
 import { useQuery } from "convex/react";
 import { useLocalSearchParams } from "expo-router";
 import { useRef } from "react";
-import { FlatList, Platform, View } from "react-native";
+import { FlatList, View } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import RecipeIntro from "../../components/recipe/RecipeIntro";
 
@@ -31,7 +31,7 @@ export default function RecipeDetail() {
         <View
           style={{
             padding: 20,
-            paddingTop: Platform.OS == "ios" ? 40 : 40,
+            paddingTop: 55,
             backgroundColor: Colors.WHITE,
             height: "100%",
           }}

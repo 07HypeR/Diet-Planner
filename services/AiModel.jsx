@@ -34,7 +34,7 @@ export const GenerateRecipe = async (PROMPT) =>
     }
   );
 
-const BASE_URL = "https://diet-planner-image-server.onrender.com/api";
+const BASE_URL = "https://diet-planner-image-server-p8rw.onrender.com/api";
 export const RecipeImageApi = axios.create({
   baseURL: BASE_URL,
 });

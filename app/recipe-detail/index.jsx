@@ -54,7 +54,13 @@ export default function RecipeDetail() {
             />
           </View>
 
-          <ActionSheet ref={actionSheetRef}>
+          <ActionSheet
+            ref={actionSheetRef}
+            gestureEnabled={true}
+            closeOnPressBack={true}
+            closeOnTouchBackdrop={true}
+            defaultOverlayOpacity={0.3}
+          >
             <AddToMealActionSheet
               recipeDetail={recipeDetail}
               hideActionSheet={() => actionSheetRef.current.hide()}

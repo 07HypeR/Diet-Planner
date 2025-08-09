@@ -40,7 +40,7 @@ export default function RecipeOptionList({ RecipeOption }) {
       console.log(parsedJsonResp);
 
       // Generate Recipe Image
-      const aiImageresp = await RecipeImageApi.post("/generate-image", {
+      const aiImageresp = await RecipeImageApi.post("/image/generate", {
         prompt: parsedJsonResp?.imagePrompt,
       });
       console.log(aiImageresp.data.imageUrl);

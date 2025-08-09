@@ -77,7 +77,7 @@ export default function Profile() {
         }}
       >
         <Image
-          source={require("../../assets/images/user.gif")}
+          source={require("../../assets/images/user.png")}
           style={{
             width: 100,
             height: 100,

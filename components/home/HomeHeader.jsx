@@ -14,7 +14,7 @@ export default function HomeHeader() {
       }}
     >
       <Image
-        source={require("../../assets/images/user.gif")}
+        source={require("../../assets/images/user.png")}
         style={{
           width: 60,
           height: 60,
